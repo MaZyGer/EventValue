@@ -7,35 +7,8 @@ using UnityEngine;
 namespace Maz.Unity.Events.Editor
 {
 
-//	[CustomPropertyDrawer(typeof(EventValueChangedAttribute))]
-//	public class EventValueChangedEditor : PropertyDrawer
-//	{
-//		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-//		{
-//			EditorGUI.BeginChangeCheck();
-//;
-//			var index = property.enumValueIndex;
-
-//			EditorGUI.PropertyField(position, property, label);
-
-//			if (EditorGUI.EndChangeCheck())
-//			{
-//				var newIndex = property.enumValueIndex;
-//				if (!index.Equals(newIndex))
-//				{
-//					var obj = (IEventValue)fieldInfo.GetValue(property.serializedObject.targetObject);
-//					obj.Raise();
-//					Debug.Log("Raise");
-//				}
-
-
-//			}
-//		}
-//	}
-
-
 	[CustomPropertyDrawer(typeof(EventValue<>))]
-	public class EventValueEditor : PropertyDrawer
+	public class EventValueDrawer : PropertyDrawer
 	{
 		float EXPAND_HEIGHT = 0f;
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
@@ -59,10 +32,15 @@ namespace Maz.Unity.Events.Editor
 			{
 				neededHeight = EditorGUI.GetPropertyHeight(valueProp, true);
 				position.height = neededHeight;
-				EditorGUI.PropertyField(position, property, label, false);
+				//EditorGUI.PropertyField(position, property, label, false);
+
+				var widthOld = position.width;
+				position.width = GUI.skin.label.CalcSize(label).x;
+				property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, label, true);
+				position.width = widthOld;
 
 				neededHeight = EditorGUI.GetPropertyHeight(valueProp, true);
-				position.height = neededHeight;
+				position.height = neededHeight + 2f;
 				EditorGUI.PropertyField(position, valueProp, new GUIContent(" "), true);
 
 				isExpanded = property.isExpanded;

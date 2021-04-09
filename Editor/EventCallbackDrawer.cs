@@ -27,7 +27,6 @@ namespace Maz.Unity.Events.Editor
 		}
 
 		float expanded_height = 0f;
-		bool recreate = false;
 		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
 		{
 			return EditorGUI.GetPropertyHeight(property, label, false) + expanded_height + 12f;
@@ -35,7 +34,6 @@ namespace Maz.Unity.Events.Editor
 
 		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
 		{
-			recreate = false;
 			expanded_height = 0f;
 
 
@@ -56,7 +54,7 @@ namespace Maz.Unity.Events.Editor
 			EditorGUI.PropertyField(position, targetObjectProp, label, false);
 			if (EditorGUI.EndChangeCheck())
 			{
-				recreate = true;
+				
 			}
 
 			if (targetObjectProp.objectReferenceValue == null)
