@@ -1,0 +1,17 @@
+{
+  "name": "maz.unity.eventvalue",
+  "version": "0.9.0",
+  "displayName": "EventValue",
+  "description": "This generic type helps to automatically fire event if a value is changed. Also contains now EventCallback to invoke methods with return non-void types",
+  "unity": "2020.2",
+  "unityRelease": "0f1",
+  "keywords": [
+    "Library",
+    "Inspector",
+    "UnityEvent",
+    "Event"
+  ],
+  "author": {
+    "name": "MaZy"
+  }
+}

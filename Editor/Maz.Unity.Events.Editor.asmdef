@@ -1,0 +1,18 @@
+{
+    "name": "Maz.Unity.Events.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:08a658344fb87ef4c8ed3ff691f5fa2d"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
