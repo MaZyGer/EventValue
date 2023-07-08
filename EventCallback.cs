@@ -19,6 +19,7 @@ namespace Maz.Unity.Events
 			FloatValue, 
 			StringValue 
 		}
+
 		public ArgumentTypes argumentType = ArgumentTypes.NullValue;
 		public string argumentTypeName;
 
@@ -93,17 +94,27 @@ namespace Maz.Unity.Events
 			isCached = false;
 			_args = null;
 		}
+
+		public static T CreateDelegate<T>(object target, string methodName) 
+		{
+			if (!string.IsNullOrEmpty(methodName))
+				return (T)(object)Delegate.CreateDelegate(typeof(T), target, methodName);
+
+			return default;
+		}
 	}
 
 	public abstract class EventCallbackBase<TReturn> : EventCallback
 	{
-		public void SetMethod(UnityEngine.Object target, string methodName, bool dynamic, params Argument[] args)
-		{
-			this.targetObject = target;
-			this.methodName = methodName;
-			this.arguments = args;
-			isCached = false;
-		}
+		//public void SetMethod(UnityEngine.Object target, string methodName, bool dynamic, params Argument[] args)
+		//{
+		//	this.targetObject = target;
+		//	this.methodName = methodName;
+		//	this.arguments = args;
+		//	isCached = false;
+		//}
+
+		protected abstract void Factory();
 
 		protected abstract TReturn Invoke(params object[] args);
 
@@ -118,12 +129,12 @@ namespace Maz.Unity.Events
 	{
 		public Func<TReturn> func = default;
 
-		void Cache()
+		protected override void Factory()
 		{
 			if (!isCached)
 			{
-				if (!string.IsNullOrEmpty(methodName))
-					func = (Func<TReturn>)Delegate.CreateDelegate(typeof(Func<TReturn>), targetObject, methodName);
+				
+				func = CreateDelegate<Func<TReturn>>(targetObject, methodName);
 
 				isCached = true;
 			}
@@ -131,8 +142,8 @@ namespace Maz.Unity.Events
 
 		protected override TReturn Invoke(params object[] args)
 		{
-			Cache();
-			return func.Invoke();
+			Factory();
+			return func != null ? func.Invoke() : default;
 		}
 	}
 
@@ -142,12 +153,11 @@ namespace Maz.Unity.Events
 	{
 		public Func<T0, TReturn> func = default;
 
-		void Cache()
+		protected override void Factory()
 		{
 			if (!isCached)
 			{
-				if (!string.IsNullOrEmpty(methodName))
-					func = (Func<T0, TReturn>)Delegate.CreateDelegate(typeof(Func<T0, TReturn>), targetObject, methodName);
+				func = CreateDelegate<Func<T0, TReturn>>(targetObject, methodName);
 
 				isCached = true;
 			}
@@ -155,13 +165,12 @@ namespace Maz.Unity.Events
 
 		protected override TReturn Invoke(params object[] args)
 		{
-			Cache();
-			return func.Invoke((T0)args[0]);
+			Factory();
+			return func != null ? func.Invoke((T0)args[0]) : default;
 		}
 
 		public TReturn Invoke(T0 t0)
 		{
-			Cache();
 			return func.Invoke(t0);
 		}
 	}
@@ -171,12 +180,11 @@ namespace Maz.Unity.Events
 	{
 		public Func<T0, T1, TReturn> func = default;
 
-		void Cache()
+		protected override void Factory()
 		{
 			if (!isCached)
 			{
-				if (!string.IsNullOrEmpty(methodName))
-					func = (Func<T0, T1, TReturn>)Delegate.CreateDelegate(typeof(Func<T0, T1, TReturn>), targetObject, methodName);
+				func = CreateDelegate<Func<T0, T1, TReturn>>(targetObject, methodName);
 
 				isCached = true;
 			}
@@ -184,14 +192,67 @@ namespace Maz.Unity.Events
 
 		protected override TReturn Invoke(params object[] args)
 		{
-			Cache();
-			return func.Invoke((T0)args[0], (T1)args[1]);
+			Factory();
+			return func != null ? func.Invoke((T0)args[0], (T1)args[1]) : default;
 		}
 
 		public TReturn Invoke(T0 t0, T1 t1)
 		{
-			Cache();
 			return func.Invoke(t0, t1);
+		}
+	}
+
+	[System.Serializable]
+	public class EventCallback<T0, T1, T2, TReturn> : EventCallbackBase<TReturn>
+	{
+		public Func<T0, T1, T2, TReturn> func = default;
+
+		protected override void Factory()
+		{
+			if (!isCached)
+			{
+				func = CreateDelegate<Func<T0, T1, T2, TReturn>>(targetObject, methodName);
+
+				isCached = true;
+			}
+		}
+
+		protected override TReturn Invoke(params object[] args)
+		{
+			Factory();
+			return func != null ? func.Invoke((T0)args[0], (T1)args[1], (T2)args[2]) : default;
+		}
+
+		public TReturn Invoke(T0 t0, T1 t1, T2 t2)
+		{
+			return func.Invoke(t0, t1, t2);
+		}
+	}
+
+	[System.Serializable]
+	public class EventCallback<T0, T1, T2, T3, TReturn> : EventCallbackBase<TReturn>
+	{
+		public Func<T0, T1, T2, T3, TReturn> func = default;
+
+		protected override void Factory()
+		{
+			if (!isCached)
+			{
+				func = CreateDelegate<Func<T0, T1, T2, T3, TReturn>>(targetObject, methodName);
+
+				isCached = true;
+			}
+		}
+
+		protected override TReturn Invoke(params object[] args)
+		{
+			Factory();
+			return func != null ? func.Invoke((T0)args[0], (T1)args[1], (T2)args[2], (T3)args[3]) : default;
+		}
+
+		public TReturn Invoke(T0 t0, T1 t1, T2 t2, T3 t3)
+		{
+			return func.Invoke(t0, t1, t2, t3);
 		}
 	}
 

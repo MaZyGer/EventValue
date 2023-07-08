@@ -85,7 +85,7 @@ namespace Maz.Unity.Events.Editor
 			var returnType = generics.Last();
 
 			var type = targetObjectProp.objectReferenceValue.GetType();
-			var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(m => m.ReturnType == returnType && m.GetParameters().Length == (generics.Length-1)).ToArray();
+			var methods = type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.GetProperty).Where(m => m.ReturnType == returnType && m.GetParameters().Length == (generics.Length-1)).ToArray();
 			var isCachedRef = typeof(EventCallback<>).GetField("isCached", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
 			var target = (EventCallback)fieldInfo.GetValue(property.serializedObject.targetObject);
@@ -125,7 +125,7 @@ namespace Maz.Unity.Events.Editor
 			if (EditorGUI.DropdownButton(pos, new GUIContent(methodName), FocusType.Keyboard))
 			{
 				GenericMenu menu = new GenericMenu();
-				menu.AddDisabledItem(new GUIContent("Hi"));
+				
 				foreach (var i in items)
 				{
 					menu.AddItem(i.label, false, i.action);

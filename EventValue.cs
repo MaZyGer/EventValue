@@ -73,7 +73,10 @@ namespace Maz.Unity.Events
 			OnChangedEvent?.Invoke(value);
 		}
 
-
+		public override string ToString()
+		{
+			return Value.ToString();
+		}
 	}
 
 
